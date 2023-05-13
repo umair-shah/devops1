@@ -33,7 +33,7 @@ steps:
   displayName: 'unittest'
   inputs:
     command: 'test'
-    projects: '**/*.csproj'
+    projects: 'BulletinBoard.SeleniumTests/BulletinBoard.SeleniumTests.csproj'
 
 
     configuration: '$(buildConfiguration)'
