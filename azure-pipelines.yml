@@ -34,7 +34,17 @@ steps:
   inputs:
     command: 'test'
     projects: 'BulletinBoard.Tests/BulletinBoard.Tests.csproj'
-
-
     configuration: '$(buildConfiguration)'
 
+-   task: DotNetCoreCLI@2
+    displayName: Publish
+    inputs:
+      command: 'publish'
+      publishWebProjects: true
+      arguments: '-o $(Build.ArtifactStagingDirectory)'
+  
+-   task: PublishBuildArtifacts@1
+    displayName: Publish Artifacts ADO - Website
+    inputs:
+      pathToPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: Website
