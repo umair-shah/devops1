@@ -33,7 +33,7 @@ steps:
   displayName: 'unittest'
   inputs:
     command: 'test'
-    projects: '**/*Tests.csproj'
+    projects: '**/*.*Tests.csproj'
 
 
     configuration: '$(buildConfiguration)'
