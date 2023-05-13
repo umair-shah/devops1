@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Chrome;
 
 namespace BulletinBoard.SeleniumTests
 {
@@ -13,8 +14,8 @@ namespace BulletinBoard.SeleniumTests
         public void Popular_Has_CorrectTableTitle()
         {
             // Arrange
-            var driver = new InternetExplorerDriver();
-            var url = "http://localhost:5000/";
+            var driver = new ChromeDriver("D:/devops_project/bulletin-board/BulletinBoard.SeleniumTests/drivers/");
+            var url = "https://localhost:44304/";
 
             // Act
             try
@@ -41,8 +42,8 @@ namespace BulletinBoard.SeleniumTests
         public void UserName_IsVisible_InNavbar_AfterLogin()
         {
             // Arrange
-            var driver = new InternetExplorerDriver();
-            var url = "http://localhost:5000/account/login";
+            var driver = new ChromeDriver("D:/devops_project/bulletin-board/BulletinBoard.SeleniumTests/drivers/");
+            var url = "https://localhost:44304/account/login";
 
             // Act
             try
@@ -61,7 +62,7 @@ namespace BulletinBoard.SeleniumTests
                 submitButton.SendKeys("\n");
 
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
-                wait.Until(UrlToBe("http://localhost:5000/"));
+                wait.Until(UrlToBe("https://localhost:44304/"));
                 var userGreet = driver.FindElement(By.Id("UserName")).Text;
 
                 // Assert
@@ -82,8 +83,8 @@ namespace BulletinBoard.SeleniumTests
         public void EmailError_Appears_WhenUserTriesToRegister_WithInvalidEmail()
         {
             // Arrange
-            var driver = new InternetExplorerDriver();
-            var url = "http://localhost:5000/account/register";
+            var driver = new ChromeDriver("D:/devops_project/bulletin-board/BulletinBoard.SeleniumTests/drivers/");
+            var url = "https://localhost:44304/account/register";
 
             try
             {

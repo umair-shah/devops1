@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  bulletinboard:
+    image: ${DOCKER_REGISTRY-}bulletinboard
+    build:
+      context: .
+      dockerfile: BulletinBoard\Dockerfile
