@@ -10,43 +10,77 @@ pool:
   name: 'default'
   vmImage: 'DESKTOP-7F2ISI3'
 
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+# variables:
+#   solution: '**/*.sln'
+#   buildPlatform: 'Any CPU'
+#   buildConfiguration: 'Release'
 
-steps:
-- task: NuGetToolInstaller@1
+# steps:
+# - task: NuGetToolInstaller@1
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+# - task: NuGetCommand@2
+#   inputs:
+#     restoreSolution: '$(solution)'
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+# - task: VSBuild@1
+#   inputs:
+#     solution: '$(solution)'
+#     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+#     platform: '$(buildPlatform)'
+#     configuration: '$(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  displayName: 'unittest'
-  inputs:
-    command: 'test'
-    projects: 'BulletinBoard.Tests/BulletinBoard.Tests.csproj'
-    configuration: '$(buildConfiguration)'
+# - task: DotNetCoreCLI@2
+#   displayName: 'unittest'
+#   inputs:
+#     command: 'test'
+#     projects: 'BulletinBoard.Tests/BulletinBoard.Tests.csproj'
+#     configuration: '$(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Publish artifact'
-  inputs:
-    command: 'publish'
-    publishWebProjects: true
-    projects: '**/*.csproj'
-    zipAfterPublish: true
-    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
+# - task: DotNetCoreCLI@2
+#   displayName: 'Publish artifact'
+#   inputs:
+#     command: 'publish'
+#     publishWebProjects: true
+#     projects: '**/*.csproj'
+#     zipAfterPublish: true
+#     arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish build artifact'
-  inputs:
-    artifactName: 'drop'
+# - task: PublishBuildArtifacts@1
+#   displayName: 'Publish build artifact'
+#   inputs:
+#     artifactName: 'drop'
     
+steps:
+  - task: DotNetCoreCLI@2
+    displayName: Restore
+    inputs:
+      command: 'restore'
+      projects: '**/*.sln'
+      feedsToUse: 'select'
+
+  - task: DotNetCoreCLI@2
+    displayName: Build
+    inputs:
+      command: 'build'
+      projects: '**/*.sln'
+
+  - task: DotNetCoreCLI@2
+    displayName: Test
+    inputs:
+      command: 'test'
+      projects: 'BulletinBoard.Tests/BulletinBoard.Tests.csproj'
+
+  - task: DotNetCoreCLI@2
+    displayName: Publish
+    inputs:
+      command: 'publish'
+      publishWebProjects: true
+      arguments: '-o $(Build.ArtifactStagingDirectory)'
+
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Artifacts ADO - Website
+    inputs:
+      pathToPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: Website
+    
+
