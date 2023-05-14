@@ -44,23 +44,11 @@ steps:
 #     projects: '**/*.csproj'
 #     zipAfterPublish: true
 #     arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
+
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish build artifact'
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
-    
-# - task: PublishBuildArtifacts@1
-#   displayName: 'Publish build artifact'
-#   inputs:
-#     artifactName: 'drop'
+    artifactName: 'drop'
     
 
 
