@@ -1,58 +1,62 @@
-# # ASP.NET Core (.NET Framework)
-# # Build and test ASP.NET Core projects targeting the full .NET Framework.
-# # Add steps that publish symbols, save build artifacts, and more:
-# # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
+#NAME THE PIPELINE SAME AS FILE (WITHOUT ".yml")
 # trigger:
 # - main
 
-# pool:
-#   name: 'default'
-#   vmImage: 'DESKTOP-7F2ISI3'
+resources:
+  repositories:
+    - repository: self
+      trigger: none
 
-# variables:
-#   solution: '**/*.sln'
-#   buildPlatform: 'Any CPU'
-#   buildConfiguration: 'Release'
-
-# steps:
-# - task: NuGetToolInstaller@1
-
-# - task: NuGetCommand@2
-#   inputs:
-#     restoreSolution: '$(solution)'
-
-# - task: VSBuild@1
-#   inputs:
-#     solution: '$(solution)'
-#     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-#     platform: '$(buildPlatform)'
-#     configuration: '$(buildConfiguration)'
-
-# - task: DotNetCoreCLI@2
-#   displayName: 'unittest'
-#   inputs:
-#     command: 'test'
-#     projects: 'BulletinBoard.Tests/BulletinBoard.Tests.csproj'
-#     configuration: '$(buildConfiguration)'
-
-# # - task: DotNetCoreCLI@2
-# #   displayName: 'Publish artifact'
-# #   inputs:
-# #     command: 'publish'
-# #     publishWebProjects: true
-# #     projects: '**/*.csproj'
-# #     zipAfterPublish: true
-# #     arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
-
-# - task: PublishBuildArtifacts@1
-#   displayName: 'Publish build artifact'
-#   inputs:
-#     artifactName: 'drop'
+stages:
+- stage: Build
+  displayName: Build .Net Core Solution
+  jobs:
+  - job: Build
+    pool:
+      name: 'default'
+      vmImage: 'DESKTOP-7F2ISI3'
     
+    steps:
 
+    - task: NuGetToolInstaller@1
 
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: '**/*.sln'
+    - task: DotNetCoreCLI@2
+      displayName: Restore
+      inputs:
+        command: 'restore'
+        projects: '**/*.sln'
+        feedsToUse: 'select'
+
+    - task: DotNetCoreCLI@2
+      displayName: Build
+      inputs:
+        command: 'build'
+        projects: '**/*.sln'
     
-
+    - task: DotNetCoreCLI@2
+      displayName: Test
+      inputs:
+        command: 'test'
+        projects: 'BulletinBoard.Tests/BulletinBoard.Tests.csproj'
+    - task: VSTest@2
+      inputs:
+        testSelector: 'testAssemblies'
+        testAssemblyVer2: '**\*test*.dll'
+        searchFolder: '$(System.DefaultWorkingDirectory)'
+    - task: DotNetCoreCLI@2
+      displayName: Publish
+      inputs:
+        command: 'publish'
+        publishWebProjects: true
+        arguments: '-o $(Build.ArtifactStagingDirectory)'
+    
+    - task: PublishBuildArtifacts@1
+      displayName: Publish Artifacts ADO - Website
+      inputs:
+        pathToPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: Website
     
 
