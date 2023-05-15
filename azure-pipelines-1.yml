@@ -41,11 +41,7 @@ stages:
       inputs:
         command: 'test'
         projects: 'BulletinBoard.Tests/BulletinBoard.Tests.csproj'
-    - task: VSTest@2
-      inputs:
-        testSelector: 'testAssemblies'
-        testAssemblyVer2: '**\*test*.dll'
-        searchFolder: '$(System.DefaultWorkingDirectory)'
+
     - task: DotNetCoreCLI@2
       displayName: Publish
       inputs:
