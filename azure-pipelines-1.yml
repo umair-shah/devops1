@@ -41,7 +41,11 @@ stages:
       inputs:
         command: 'test'
         projects: 'BulletinBoard.Tests/BulletinBoard.Tests.csproj'
-    
+    - task: DotNetCoreCLI@2
+      displayName: Test
+      inputs:
+        command: 'test'
+        projects: 'BulletinBoard.SeleniumTests/BulletinBoard.SeleniumTests.csproj'
     - task: DotNetCoreCLI@2
       displayName: Publish
       inputs:
